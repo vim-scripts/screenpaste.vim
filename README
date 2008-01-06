@@ -1,0 +1,74 @@
+This is a mirror of http://www.vim.org/scripts/script.php?script_id=1512
+
+Rationale:
+The terminal window manager Screen http://www.gnu.org/software/screen
+offers the capability to copy and paste between windows.
+In principle you can just do "C-a ]" (default) to paste the current Screen buffer into a vim buffer.
+However this gives unexpected results when 'paste' is not set or in Vim's command-line.
+This script provides convenience mappings and functions to get correct results.
+As an additional feature the current Screen buffer is available
+in any Vim instance, even those /outside/ the current screen session.
+Many commands are autodetected and the behaviour adapts automatically [:help getcmdtype()].
+
+Maps:
+Assuming the default mapleader "\" and screenpaste's default mappings you can type:
+\p   in Normal mode to put Screen buffer after cursor
+\P   in Normal mode to put Screen buffer before cursor
+\gp in Normal mode to put Screen buffer after cursor and leave cursor after new text
+\gP in Normal mode to put Screen buffer before cursor and leave cursor after new text
+\p   in Visual mode to replace selection with Screen buffer
+\gp in Visual mode to replace selection with Screen buffer and leave cursor after new text
+\p   in Insert and Replace mode to insert Screen buffer
+\p   in Command-line-mode to insert Screen buffer
+
+Commands:
+
+:ScreenYank [x]
+yanks Screen buffer [into register x]
+
+:[line]ScreenPut [x]
+puts Screen buffer after [line] (default: current line) using register [x]
+
+:[line]ScreenPut! [x]
+puts Screen buffer before [line] (default: current line) using register [x]
+
+:ScreenCmdlineConf  search | sub | noesc
+tells script how to convert Screen buffer in Command-line mode
+Examples as typed with default keybindings:
+:ScreenCmdlineConf search
+:s/\p/repl/
+:ScreenCmdlineConf sub
+:s/pattern/\p/
+
+:ScreenCmdlineInfo
+echoes info on current Command-line mode behaviour
+
+:ScreenSearch
+sets conversion of Screen buffer inserted in cmdline for search use
+
+:ScreenSub
+sets conversion of Screen buffer inserted in cmdline for substitution use
+
+:ScreenNoEsc
+sets end-of-line only conversion for Screen buffer insertion in cmdline
+
+Vimrc Examples:
+Change mappings:
+Normal and Visual mode:
+map  <Leader>P <Plug>ScreenpastePut
+Normal mode (put before cursor):
+nmap <Leader>I <Plug>ScreenpastePutBefore
+Insert and Command-line mode:
+map! <F7> <Plug>ScreenpastePut
+Change cmdline behaviour setting at startup:
+let g:screen_clmode = "sub"
+Specify Screen executable (default: 'screen'):
+let g:screen_executable = "/usr/local/bin/screen"
+Switch register used for Screen buffer (default: '"' for unnamed register):
+let g:screen_register = "s"
+Automatically select pasted text in Visual mode:
+let g:screen_visualselect = 1
+Wait longer for Screen to finish writing its exchange file:
+let g:screen_wait = '500m'
+
+Mercurial repository: http://www.blacktrash.org/hg/screenpaste
